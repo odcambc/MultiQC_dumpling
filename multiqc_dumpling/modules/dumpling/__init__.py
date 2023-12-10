@@ -1,0 +1,1 @@
+from .dumpling import MultiqcModule
