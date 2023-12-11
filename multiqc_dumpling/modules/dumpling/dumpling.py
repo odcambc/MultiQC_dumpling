@@ -266,7 +266,10 @@ class MultiqcModule(BaseMultiqcModule):
         if max_coverage < bin_n:
             bin_n = max_coverage
 
-        bin_n = int(max_coverage)
+
+        bin_n = max(1, int(max_coverage))
+
+        logging.debug("Using %x bins", bin_n)
 
         out, bins = pd.cut(
             df["Coverage"], bins=bin_n, include_lowest=True, right=False, retbins=True

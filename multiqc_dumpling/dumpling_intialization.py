@@ -13,10 +13,11 @@ log = logging.getLogger("multiqc")
 __version__ = get_distribution("multiqc_dumpling").version
 config.multiqc_dumpling_version = __version__
 
+
 def dumpling_plugin_execution_start():
     """Code to intialize the dumpling MultiQC plugin.
 
-    This adds search patterns for counts outputs and parses 
+    This adds search patterns for counts outputs and parses
     the snakemake config file to set some parameters of the target.
     """
     log.info("Running dumpling MultiQC Plugin v%s", config.multiqc_dumpling_version)
@@ -67,4 +68,6 @@ def dumpling_plugin_execution_start():
 
     with open(config.variants_file, "r") as f:
         config.n_variants = sum(1 for line in f) - 1
-    
+
+    # Add the designed variants file to the ignore list
+    config.fn_ignore_files.extend([config.variants_file])
