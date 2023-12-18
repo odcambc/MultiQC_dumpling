@@ -35,14 +35,8 @@ class MultiqcModule(BaseMultiqcModule):
 
         for f in self.find_log_files("dumpling/counts", filehandles=True):
             parsed_counts = self.parse_counts(f["f"])
-            # It is possible that there are no counts in the file, in which case
-            # parsed_counts will be a dict with a single entry. If this is the case,
-            # add the single entry to the data dict but do not plot it.
-            if len(parsed_counts) == 1:
-                self.dumpling_count_data[f["s_name"]] = parsed_counts[0]
-            else:
-                self.dumpling_count_plot_data[f["s_name"]] = parsed_counts[0]
-                self.dumpling_count_data[f["s_name"]] = parsed_counts[1]
+            self.dumpling_count_plot_data[f["s_name"]] = parsed_counts[0]
+            self.dumpling_count_data[f["s_name"]] = parsed_counts[1]
                 
         # Find load the coverage results from gatk asm results.
         self.dumpling_coverage_data = dict()
@@ -215,10 +209,18 @@ class MultiqcModule(BaseMultiqcModule):
 
         fraction_zero_counts = n_zero_counts / config.n_variants
 
-        # If there are no counts, return a dict with a single entry.
+        counts_stats_dict = {
+            "Max counts": max_counts,
+            "Mean counts": mean_counts,
+            "Median counts": median_counts,
+            "Number of zero counts": n_zero_counts,
+            "Fraction of zero counts": fraction_zero_counts,
+        }
+
+        # If there are no counts, return a dict with a single entry for plotting.
 
         if max_counts == 0:
-            return {0: len(df)}
+            return counts_stats_dict, {0: len(df)}
 
         # Use 30 bins for the histogram, unless there are fewer than 30 counts, in which case
         # use the number of counts as the number of bins.
@@ -236,13 +238,6 @@ class MultiqcModule(BaseMultiqcModule):
             zip(bins.tolist(), out.value_counts(normalize=False).sort_index().tolist())
         )
 
-        counts_stats_dict = {
-            "Max counts": max_counts,
-            "Mean counts": mean_counts,
-            "Median counts": median_counts,
-            "Number of zero counts": n_zero_counts,
-            "Fraction of zero counts": fraction_zero_counts,
-        }
         
         return counts_bin_dict, counts_stats_dict
         
