@@ -5,7 +5,7 @@ from pkg_resources import get_distribution
 
 import logging
 
-from multiqc.utils import config
+from multiqc import config
 
 # Initialise the main MultiQC logger
 log = logging.getLogger("multiqc")
@@ -53,12 +53,12 @@ def dumpling_plugin_execution_start():
                 }
             },
         )
-
+    
     # Parse the config file to get the orf length from the string
     # The orf is given in nucleotide coordinates in the form "XX-YY",
     # where XX and YY are integers.
 
-    coords = config.orf.split("-")
+    coords = config.multiqc_dumpling['orf']
     start = int(coords[0])
     end = int(coords[1])
     config.orf_length = end - start + 1
@@ -66,8 +66,8 @@ def dumpling_plugin_execution_start():
     # Read the designed variants file to get the number of designed variants
     # The first line is a header, so subtract 1 from the total number of lines
 
-    with open(config.variants_file, "r") as f:
+    with open(config.multiqc_dumpling['variants_file'], "r") as f:
         config.n_variants = sum(1 for line in f) - 1
 
     # Add the designed variants file to the ignore list
-    config.fn_ignore_files.extend([config.variants_file])
+    config.fn_ignore_files.extend([config.multiqc_dumpling['variants_file']])

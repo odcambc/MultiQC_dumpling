@@ -5,18 +5,16 @@ from __future__ import print_function
 import logging
 from collections import OrderedDict
 
-import numpy as np
 import pandas as pd
 
-from multiqc.utils import config
-from multiqc.modules.base_module import BaseMultiqcModule, ModuleNoSamplesFound
+from multiqc import config
+from multiqc.base_module import BaseMultiqcModule, ModuleNoSamplesFound
 from multiqc.plots import linegraph
 from pkg_resources import get_distribution
 
 # Initialise the main MultiQC logger
-log = logging.getLogger("multiqc")
+log = logging.getLogger(__name__)
 log.info("Loaded MultiQC_dumpling v%s", get_distribution("multiqc_dumpling").version)
-
 
 class MultiqcModule(BaseMultiqcModule):
     def __init__(self):
