@@ -10,11 +10,13 @@ import pandas as pd
 from multiqc import config
 from multiqc.base_module import BaseMultiqcModule, ModuleNoSamplesFound
 from multiqc.plots import linegraph
-from pkg_resources import get_distribution
+import importlib_metadata
+from multiqc.plots.table_object import ColumnMeta
+
 
 # Initialise the main MultiQC logger
 log = logging.getLogger(__name__)
-log.info("Loaded MultiQC_dumpling v%s", get_distribution("multiqc_dumpling").version)
+log.info("Loaded MultiQC_dumpling v%s", importlib_metadata.version("multiqc_dumpling"))
 
 class MultiqcModule(BaseMultiqcModule):
     def __init__(self):
@@ -35,7 +37,7 @@ class MultiqcModule(BaseMultiqcModule):
             parsed_counts = self.parse_counts(f["f"])
             self.dumpling_count_plot_data[f["s_name"]] = parsed_counts[0]
             self.dumpling_count_data[f["s_name"]] = parsed_counts[1]
-                
+
         # Find load the coverage results from gatk asm results.
         self.dumpling_coverage_data = dict()
         self.dumpling_coverage_plot_data = dict()
@@ -79,8 +81,7 @@ class MultiqcModule(BaseMultiqcModule):
         self.write_data_file(self.dumpling_coverage_plot_data, "multiqc_dumpling_coverage_plot")
 
         # Add to the table
-        headers = OrderedDict()
-        headers = {
+        counts_headers = {
             "Mean counts": {
                 "title": "Mean variant counts",
                 "description": "The mean number of counts for a variant in the sample.",
@@ -104,7 +105,12 @@ class MultiqcModule(BaseMultiqcModule):
                 "description": "The fraction of variants with zero counts.",
                 "min": 0,
                 "scale": "RdYlGn-rev",
-            },
+            }
+        }
+
+        self.general_stats_addcols(self.dumpling_count_data, counts_headers)
+
+        coverage_headers = {
             "Max coverage": {
                 "title": "Max sequencing depth",
                 "description": "The maximum sequencing depth of a position in the reference.",
@@ -122,11 +128,10 @@ class MultiqcModule(BaseMultiqcModule):
                 "description": "The mean sequencing depth of a position in the reference.",
                 "min": 0,
                 "scale": "RdYlGn-rev",
-            },
+            }
         }
 
-        self.general_stats_addcols(self.dumpling_count_data, headers)
-        self.general_stats_addcols(self.dumpling_coverage_data, headers)
+        self.general_stats_addcols(self.dumpling_coverage_data, coverage_headers)
 
         # Plot the counts histogram
 
@@ -193,8 +198,8 @@ class MultiqcModule(BaseMultiqcModule):
         df = pd.read_csv(file, index_col=False, header=0)
 
         max_counts = int(df["count"].max())
-        mean_counts = df["count"].mean()
-        median_counts = df["count"].median()
+        mean_counts = float(df["count"].mean())
+        median_counts = int(df["count"].median())
         n_zero_counts = int(len(df[df["count"] == 0]))
 
         if not hasattr(config, "n_variants"):
@@ -236,9 +241,9 @@ class MultiqcModule(BaseMultiqcModule):
             zip(bins.tolist(), out.value_counts(normalize=False).sort_index().tolist())
         )
 
-        
+
         return counts_bin_dict, counts_stats_dict
-        
+
     def parse_coverage(self, file, bin_n=300):
         """Parse the coverage file and return a dict of coverage and their frequencies for
         plotting a histogram. Coverage is calculated by scaling the observed coverage by the
@@ -258,9 +263,9 @@ class MultiqcModule(BaseMultiqcModule):
         # Use 30 bins for the histogram, unless there are fewer than 30 counts, in which case
         # use the number of counts as the number of bins.
 
-        max_coverage = df["Coverage"].max()
-        min_coverage = df["Coverage"].min()
-        mean_coverage = df["Coverage"].mean()
+        max_coverage = int(df["Coverage"].max())
+        min_coverage = int(df["Coverage"].min())
+        mean_coverage = float(df["Coverage"].mean())
 
         if max_coverage < bin_n:
             bin_n = max_coverage
@@ -268,7 +273,7 @@ class MultiqcModule(BaseMultiqcModule):
 
         bin_n = max(1, int(max_coverage))
 
-        logging.debug("Using %x bins", bin_n)
+        logging.debug("Using %s bins", bin_n)
 
         out, bins = pd.cut(
             df["Coverage"], bins=bin_n, include_lowest=True, right=False, retbins=True
@@ -279,8 +284,6 @@ class MultiqcModule(BaseMultiqcModule):
         coverage_bin_dict = dict(
             zip(bins.tolist(), out.value_counts(normalize=False).sort_index().tolist())
         )
-
-        #coverage_bin_dict = df["Coverage"].value_counts(normalize=False).to_dict()
 
         coverage_stats_dict = {
             "Max coverage": max_coverage,

@@ -9,7 +9,7 @@ For more information about MultiQC, see http://multiqc.info
 
 from setuptools import setup, find_packages
 
-version = '0.2.2'
+version = '0.3'
 
 setup(
     name = 'multiqc_dumpling',
@@ -27,6 +27,7 @@ setup(
     zip_safe=False,
     install_requires = [
         'multiqc>=1.0',
+        'pandas',
     ],
     entry_points = {
         'multiqc.modules.v1': [

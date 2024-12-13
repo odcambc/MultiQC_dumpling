@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 from __future__ import print_function
-from pkg_resources import get_distribution
+import importlib_metadata
 
 import logging
 
@@ -10,7 +10,7 @@ from multiqc import config
 # Initialise the main MultiQC logger
 log = logging.getLogger("multiqc")
 
-__version__ = get_distribution("multiqc_dumpling").version
+__version__ = importlib_metadata.version("multiqc_dumpling")
 config.multiqc_dumpling_version = __version__
 
 
@@ -53,7 +53,7 @@ def dumpling_plugin_execution_start():
                 }
             },
         )
-    
+
     # Parse the config file to get the orf length from the string
     # The orf is given in nucleotide coordinates in the form "XX-YY",
     # where XX and YY are integers.
