@@ -58,7 +58,20 @@ def dumpling_plugin_execution_start():
     # The orf is given in nucleotide coordinates in the form "XX-YY",
     # where XX and YY are integers.
 
-    coords = config.multiqc_dumpling['orf']
+    coords = config.multiqc_dumpling['orf'].split('-')
+    # Check that the coordinates are specified in the expected format
+    if len(coords) != 2:
+        log.error("Invalid ORF coordinates: %s", config.multiqc_dumpling['orf'])
+        raise ValueError("Invalid ORF coordinates")
+    if not all(coord.isdigit() for coord in coords):
+        log.error("Invalid ORF coordinates: %s", config.multiqc_dumpling['orf'])
+        raise ValueError("Invalid ORF coordinates")
+    if int(coords[0]) > int(coords[1]):
+        log.error("Invalid ORF coordinates: %s", config.multiqc_dumpling['orf'])
+        raise ValueError("Invalid ORF coordinates")
+    if int(coords[0]) < 1:
+        log.error("Invalid ORF coordinates: %s", config.multiqc_dumpling['orf'])
+        raise ValueError("Invalid ORF coordinates")
     start = int(coords[0])
     end = int(coords[1])
     config.orf_length = end - start + 1
