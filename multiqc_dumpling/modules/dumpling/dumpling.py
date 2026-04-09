@@ -3,7 +3,6 @@
 from __future__ import print_function
 
 import logging
-from collections import OrderedDict
 
 import pandas as pd
 
@@ -11,7 +10,6 @@ from multiqc import config
 from multiqc.base_module import BaseMultiqcModule, ModuleNoSamplesFound
 from multiqc.plots import linegraph
 import importlib_metadata
-from multiqc.plots.table_object import ColumnMeta
 
 
 # Initialise the main MultiQC logger
@@ -69,16 +67,17 @@ class MultiqcModule(BaseMultiqcModule):
         log.info("Found %s processed count files", len(self.dumpling_count_plot_data))
 
         if len(self.dumpling_coverage_data) == 0:
-            log.debug("Could not find any coverage reports in %s", config.analysis_dir)
-            raise ModuleNoSamplesFound
-
-        log.info("Found %s coverage report files", len(self.dumpling_coverage_data))
+            log.warning("Could not find any coverage reports in %s", config.analysis_dir)
+        else:
+            log.info("Found %s coverage report files", len(self.dumpling_coverage_data))
 
         # Write all the parsed report data to files
         self.write_data_file(self.dumpling_count_data, "multiqc_dumpling_counts")
-        self.write_data_file(self.dumpling_coverage_data, "multiqc_dumpling_coverage")
+        if self.dumpling_coverage_data:
+            self.write_data_file(self.dumpling_coverage_data, "multiqc_dumpling_coverage")
         self.write_data_file(self.dumpling_count_plot_data, "multiqc_dumpling_counts_plot")
-        self.write_data_file(self.dumpling_coverage_plot_data, "multiqc_dumpling_coverage_plot")
+        if self.dumpling_coverage_plot_data:
+            self.write_data_file(self.dumpling_coverage_plot_data, "multiqc_dumpling_coverage_plot")
 
         # Add to the table
         counts_headers = {
@@ -131,7 +130,8 @@ class MultiqcModule(BaseMultiqcModule):
             }
         }
 
-        self.general_stats_addcols(self.dumpling_coverage_data, coverage_headers)
+        if self.dumpling_coverage_data:
+            self.general_stats_addcols(self.dumpling_coverage_data, coverage_headers)
 
         # Plot the counts histogram
 
@@ -169,25 +169,26 @@ class MultiqcModule(BaseMultiqcModule):
         # Plot the coverage histogram
 
         # Create line plot for coverage histogram
-        pconfig = {
-            "id": "dumpling_coverage_hist",
-            "title": "Coverage histogram",
-            "ylab": "Number of positions",
-            "xlab": "Coverage (read depth)",
-            "ymin": 0,
-            "smooth_points": 30,
-            "logswitch": True,
-        }
-        line_plot_html = linegraph.plot(self.dumpling_coverage_plot_data, pconfig)
+        if self.dumpling_coverage_plot_data:
+            pconfig = {
+                "id": "dumpling_coverage_hist",
+                "title": "Coverage histogram",
+                "ylab": "Number of positions",
+                "xlab": "Coverage (read depth)",
+                "ymin": 0,
+                "smooth_points": 30,
+                "logswitch": True,
+            }
+            line_plot_html = linegraph.plot(self.dumpling_coverage_plot_data, pconfig)
 
-        # Add a report section for coverage histogram
-        self.add_section(
-            description="This plot shows the sequencing depth of the target gene.",
-            helptext="""
-            Help text for coverage histogram.
-            """,
-            plot=line_plot_html,
-        )
+            # Add a report section for coverage histogram
+            self.add_section(
+                description="This plot shows the sequencing depth of the target gene.",
+                helptext="""
+                Help text for coverage histogram.
+                """,
+                plot=line_plot_html,
+            )
 
     def parse_counts(self, file, bin_n=30):
         """Parse the counts file and return a dict of counts and their frequencies for
@@ -223,7 +224,7 @@ class MultiqcModule(BaseMultiqcModule):
         # If there are no counts, return a dict with a single entry for plotting.
 
         if max_counts == 0:
-            return counts_stats_dict, {0: len(df)}
+            return {0: len(df)}, counts_stats_dict
 
         # Use 30 bins for the histogram, unless there are fewer than 30 counts, in which case
         # use the number of counts as the number of bins.
@@ -267,11 +268,8 @@ class MultiqcModule(BaseMultiqcModule):
         min_coverage = int(df["Coverage"].min())
         mean_coverage = float(df["Coverage"].mean())
 
-        if max_coverage < bin_n:
-            bin_n = max_coverage
-
-
-        bin_n = max(1, int(max_coverage))
+        bin_n = min(bin_n, max_coverage)
+        bin_n = max(1, int(bin_n))
 
         logging.debug("Using %s bins", bin_n)
 
