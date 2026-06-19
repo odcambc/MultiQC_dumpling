@@ -1,9 +1,20 @@
 multiqc_dumpling:
-  orf: "141-1568"
+  orf: "141-1568"          # nucleotide coordinates of ORF, 1-based inclusive
   variants_file: "example_variants.csv"
+  # Optional settings (remove or comment out if not applicable):
+  # amplicon_length: 1800  # full amplicon length in bp; enables WT fraction estimate
+  # amplicon_start: 1      # amplicon start coordinate
+  # amplicon_end: 1800     # amplicon end coordinate
+  # minq: 30               # minimum base quality used during variant calling
+  # min_variants: 2        # minimum count to retain a variant call
+
+  # Reproducibility metadata (optional but recommended):
+  # pipeline_version: "v0.2.0-5-ge6c2862"     # dumpling pipeline version, e.g. `git describe`
+  # pipeline_config_file: "config/example.yaml"  # path to the dumpling snakemake config used
 
 extra_fn_clean_exts:
   - ".refCoverage"
+  - "_decontam"
   - "_trim"
   - "_map"
   - "_merge"

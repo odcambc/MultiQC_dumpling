@@ -1,0 +1,25 @@
+java -ea -Xmx16g -Xms16g -Djava.library.path=/Users/bartleby/miniforge3/envs/dumpling_env/opt/bbmap-39.13-1/jni/ -cp /Users/bartleby/miniforge3/envs/dumpling_env/opt/bbmap-39.13-1/current/ jgi.BBMerge -Xmx16g in=results/example_experiment_notile/baseline_1_R1.clean.trim.fastq.gz in2=results/example_experiment_notile/baseline_1_R2.clean.trim.fastq.gz out=results/example_experiment_notile/baseline_1_R1.ec.clean.trim.fastq.gz out2=results/example_experiment_notile/baseline_1_R2.ec.clean.trim.fastq.gz overwrite=true ihist=stats/example_experiment_notile/baseline_1_merge.ihist t=16 ecco mix showhiststats=t
+Executing jgi.BBMerge [-Xmx16g, in=results/example_experiment_notile/baseline_1_R1.clean.trim.fastq.gz, in2=results/example_experiment_notile/baseline_1_R2.clean.trim.fastq.gz, out=results/example_experiment_notile/baseline_1_R1.ec.clean.trim.fastq.gz, out2=results/example_experiment_notile/baseline_1_R2.ec.clean.trim.fastq.gz, overwrite=true, ihist=stats/example_experiment_notile/baseline_1_merge.ihist, t=16, ecco, mix, showhiststats=t]
+Version 39.13
+
+Writing mergable reads unmerged in two files.
+Started output threads.
+Total time: 1.935 seconds.
+
+Pairs:               	99891
+Joined:              	70331   	70.408%
+Ambiguous:           	0       	0.000%
+No Solution:         	29560   	29.592%
+Too Short:           	0       	0.000%
+Errors Corrected:    	358703
+
+Avg Insert:          	521.8
+Standard Deviation:  	32.5
+Mode:                	525
+
+Insert range:        	40 - 553
+90th percentile:     	525
+75th percentile:     	525
+50th percentile:     	525
+25th percentile:     	525
+10th percentile:     	525

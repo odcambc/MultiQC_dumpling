@@ -1,0 +1,23 @@
+java -ea -Xmx16g -Xms16g -cp /Users/bartleby/miniforge3/envs/dumpling_env/opt/bbmap-39.13-1/current/ jgi.BBDuk -Xmx16g in=results/example_experiment_notile/baseline_1_R1.trim.fastq.gz in2=results/example_experiment_notile/baseline_1_R2.trim.fastq.gz out=results/example_experiment_notile/baseline_1_R1.clean.trim.fastq.gz out2=results/example_experiment_notile/baseline_1_R2.clean.trim.fastq.gz stats=stats/example_experiment_notile/baseline_1_trim_contam.stats.txt overwrite=true k=31 t=16 ref=resources/sequencing_artifacts.fa.gz,resources/phix174_ill.ref.fa.gz
+Executing jgi.BBDuk [-Xmx16g, in=results/example_experiment_notile/baseline_1_R1.trim.fastq.gz, in2=results/example_experiment_notile/baseline_1_R2.trim.fastq.gz, out=results/example_experiment_notile/baseline_1_R1.clean.trim.fastq.gz, out2=results/example_experiment_notile/baseline_1_R2.clean.trim.fastq.gz, stats=stats/example_experiment_notile/baseline_1_trim_contam.stats.txt, overwrite=true, k=31, t=16, ref=resources/sequencing_artifacts.fa.gz,resources/phix174_ill.ref.fa.gz]
+Version 39.13
+
+0.004 seconds.
+Initial:
+Memory: max=17179m, total=17179m, free=17141m, used=38m
+
+Added 92346 kmers; time: 	0.043 seconds.
+Memory: max=17179m, total=17179m, free=17096m, used=83m
+
+Input is being processed as paired
+Started output streams:	0.016 seconds.
+Processing time:   		0.236 seconds.
+
+Input:                  	199788 reads 		59930232 bases.
+Contaminants:           	6 reads (0.00%) 	1802 bases (0.00%)
+Total Removed:          	6 reads (0.00%) 	1802 bases (0.00%)
+Result:                 	199782 reads (100.00%) 	59928430 bases (100.00%)
+
+Time:                         	0.304 seconds.
+Reads Processed:        199k 	656.30k reads/sec
+Bases Processed:      59930k 	196.87m bases/sec

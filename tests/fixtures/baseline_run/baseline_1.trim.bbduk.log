@@ -1,0 +1,30 @@
+java -ea -Xmx16g -Xms16g -cp /Users/bartleby/miniforge3/envs/dumpling_env/opt/bbmap-39.13-1/current/ jgi.BBDuk -Xmx16g in1=/Users/bartleby/Projects/dumpling-example/data_2/1_S1_L001_R1_001.fastq.gz in2=/Users/bartleby/Projects/dumpling-example/data_2/1_S1_L001_R2_001.fastq.gz ref=resources/adapters.fa ktrim=r k=23 mink=10 hdist=1 tpe tbo out1=results/example_experiment_notile/baseline_1_R1.trim.fastq.gz out2=results/example_experiment_notile/baseline_1_R2.trim.fastq.gz bhist=stats/example_experiment_notile/baseline_1_trim.bhist qhist=stats/example_experiment_notile/baseline_1_trim.qhist gchist=stats/example_experiment_notile/baseline_1_trim.gchist aqhist=stats/example_experiment_notile/baseline_1_trim.aqhist lhist=stats/example_experiment_notile/baseline_1_trim.lhist stats=stats/example_experiment_notile/baseline_1_trim.stats.txt overwrite=true t=16 gcbins=auto
+Executing jgi.BBDuk [-Xmx16g, in1=/Users/bartleby/Projects/dumpling-example/data_2/1_S1_L001_R1_001.fastq.gz, in2=/Users/bartleby/Projects/dumpling-example/data_2/1_S1_L001_R2_001.fastq.gz, ref=resources/adapters.fa, ktrim=r, k=23, mink=10, hdist=1, tpe, tbo, out1=results/example_experiment_notile/baseline_1_R1.trim.fastq.gz, out2=results/example_experiment_notile/baseline_1_R2.trim.fastq.gz, bhist=stats/example_experiment_notile/baseline_1_trim.bhist, qhist=stats/example_experiment_notile/baseline_1_trim.qhist, gchist=stats/example_experiment_notile/baseline_1_trim.gchist, aqhist=stats/example_experiment_notile/baseline_1_trim.aqhist, lhist=stats/example_experiment_notile/baseline_1_trim.lhist, stats=stats/example_experiment_notile/baseline_1_trim.stats.txt, overwrite=true, t=16, gcbins=auto]
+Version 39.13
+
+Set base content histogram output to stats/example_experiment_notile/baseline_1_trim.bhist
+Set quality histogram output to stats/example_experiment_notile/baseline_1_trim.qhist
+Set GC histogram output to stats/example_experiment_notile/baseline_1_trim.gchist
+Set average quality histogram output to stats/example_experiment_notile/baseline_1_trim.aqhist
+Set length histogram output to stats/example_experiment_notile/baseline_1_trim.lhist
+maskMiddle was disabled because useShortKmers=true
+0.005 seconds.
+Initial:
+Memory: max=17179m, total=17179m, free=17139m, used=40m
+
+Added 217877 kmers; time: 	0.028 seconds.
+Memory: max=17179m, total=17179m, free=17096m, used=83m
+
+Input is being processed as paired
+Started output streams:	0.016 seconds.
+Processing time:   		0.970 seconds.
+
+Input:                  	200000 reads 		60155494 bases.
+KTrimmed:               	1172 reads (0.59%) 	225002 bases (0.37%)
+Trimmed by overlap:     	30 reads (0.02%) 	260 bases (0.00%)
+Total Removed:          	212 reads (0.11%) 	225262 bases (0.37%)
+Result:                 	199788 reads (99.89%) 	59930232 bases (99.63%)
+
+Time:                         	1.015 seconds.
+Reads Processed:        200k 	197.03k reads/sec
+Bases Processed:      60155k 	59.26m bases/sec

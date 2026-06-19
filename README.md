@@ -37,5 +37,7 @@ First, provide a `multiqc_config.yaml` file with the following contents:
 ## License
 This project is licensed under the MIT License.
 
-## Contact
-For any questions or suggestions, please open an issue on the GitHub repository.
+## Getting help
+
+For any issues, please open an issue on the GitHub repository. For
+questions or feedback, [email Chris](https://www.waymentsteelelab.org).

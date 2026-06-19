@@ -4,9 +4,10 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "multiqc_dumpling"
-version = "1.0"
+version = "0.4"
 description = "MultiQC plugin for Dumpling DMS pipeline"
 readme = "README.md"
+requires-python = ">=3.10"
 license = { text = "MIT" }
 authors = [
   { name = "Christian Macdonald", email = "christian.macdonald@wisc.edu" },
@@ -23,6 +24,9 @@ classifiers = [
   "Operating System :: POSIX",
   "Operating System :: Unix",
   "Programming Language :: Python",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
   "Programming Language :: JavaScript",
   "Topic :: Scientific/Engineering",
   "Topic :: Scientific/Engineering :: Bio-Informatics",
